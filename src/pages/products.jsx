@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import CardProduct from '../component/fragment/CardProduct';
 import Counter from '../component/fragment/counter';
 import { getProducts } from '../services/product.service';
+import { getUsername } from '../services/auth.service';
+import { useLogin } from '../hooks/useLogin';
 
 // belajar rendering list, atau jika data ada banyak dalam bentuk card
 // const products = [
@@ -29,16 +31,31 @@ import { getProducts } from '../services/product.service';
 //   },
 // ];
 
-const email = localStorage.getItem('email');
 const ProductsPage = () => {
   // hook, state dalam functional component ato usestate
   const [cart, setCart] = useState([]);
   // state untuk total price
   const [totalPrice, setTotalPrice] = useState(0);
+  // memanggil useLogin.jsx
+  const username = useLogin();
   useEffect(() => {
     // parsing data dari lokal storage, terus kita ambil itemnya, cart, klo gaada ppake array kosong. ini didMounth. dan ga bakal ilang datanya meskipun log out
     setCart(JSON.parse(localStorage.getItem('cart')) || []);
   }, []);
+  //
+  //
+  // menampilkan username berupa token jwt yang ada di auth.services.js dan di decode
+  // dicomentarin karna mau pake custom hooks di panggil di file useLogin
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     setUsername(getUsername(token));
+  //   } else {
+  //     window.location.href = '/Login';
+  //   }
+  // }, []);
+  //
+  //
   // yang bikin masuk ke local storage, dan data pertama rp.0
   useEffect(() => {
     if (products.length > 0 && cart.length > 0) {
@@ -60,8 +77,8 @@ const ProductsPage = () => {
   };
   // untuk logout
   const handleLogout = () => {
-    localStorage.removeItem('email');
-    localStorage.removeItem('password');
+    localStorage.removeItem('token');
+
     window.location.href = '/Login';
   };
   // useRef
@@ -98,7 +115,7 @@ const ProductsPage = () => {
     // metode nested component
     <>
       <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
-        {email}
+        {username}
         <Button classname="ml-5 bg-black" onClick={handleLogout}>
           Log Out
         </Button>
@@ -111,7 +128,7 @@ const ProductsPage = () => {
             products.map((product) => (
               // jika bekerja menggunakan list harus pake KEY
               <CardProduct key={product.id}>
-                <CardProduct.Header image={product.image} />
+                <CardProduct.Header image={product.image} id={product.id} />
                 <CardProduct.Body name={product.title}>{product.description}</CardProduct.Body>
                 <CardProduct.Footer price={product.price} id={product.id} handleAddToCart={handleAddToCart} />
               </CardProduct>
