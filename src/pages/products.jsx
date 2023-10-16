@@ -5,6 +5,8 @@ import Counter from '../component/fragment/counter';
 import { getProducts } from '../services/product.service';
 import { getUsername } from '../services/auth.service';
 import { useLogin } from '../hooks/useLogin';
+import TableCart from '../component/fragment/tableCart';
+import { Navbar } from '../component/layout/navbar';
 
 // belajar rendering list, atau jika data ada banyak dalam bentuk card
 // const products = [
@@ -33,15 +35,28 @@ import { useLogin } from '../hooks/useLogin';
 
 const ProductsPage = () => {
   // hook, state dalam functional component ato usestate
-  const [cart, setCart] = useState([]);
+  // sdh tidak di pakai karna sdh pake addToCart dari redux store
+  // const [cart, setCart] = useState([]);
+  //
+  //
   // state untuk total price
-  const [totalPrice, setTotalPrice] = useState(0);
+  // udh ga di pake karna pake redux store
+  // const [totalPrice, setTotalPrice] = useState(0);
+  //
+  //
+  //
   // memanggil useLogin.jsx
-  const username = useLogin();
-  useEffect(() => {
-    // parsing data dari lokal storage, terus kita ambil itemnya, cart, klo gaada ppake array kosong. ini didMounth. dan ga bakal ilang datanya meskipun log out
-    setCart(JSON.parse(localStorage.getItem('cart')) || []);
-  }, []);
+  // const username = useLogin();
+  useLogin();
+  //
+  //
+  //
+  // panngil setCart
+  // tidak di pake lagi karna udh pake redux store
+  // useEffect(() => {
+  //   // parsing data dari lokal storage, terus kita ambil itemnya, cart, klo gaada ppake array kosong. ini didMounth. dan ga bakal ilang datanya meskipun log out
+  //   setCart(JSON.parse(localStorage.getItem('cart')) || []);
+  // }, []);
   //
   //
   // menampilkan username berupa token jwt yang ada di auth.services.js dan di decode
@@ -56,51 +71,65 @@ const ProductsPage = () => {
   // }, []);
   //
   //
+  //
   // yang bikin masuk ke local storage, dan data pertama rp.0
-  useEffect(() => {
-    if (products.length > 0 && cart.length > 0) {
-      const sum = cart.reduce((acc, item) => {
-        const product = products.find((product) => product.id === item.id);
-        return acc + product.price * item.qty;
-      }, 0);
-      setTotalPrice(sum);
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
-  }, [cart]);
-  // untuk mengambil cart yang idnya sama
-  const handleAddToCart = (id) => {
-    if (cart.find((item) => item.id === id)) {
-      setCart(cart.map((item) => (item.id === id ? { ...item, qty: item.qty + 1 } : item)));
-    } else {
-      setCart([...cart, { id, qty: 1 }]);
-    }
-  };
+  // dipindah ke tableCart
+  // useEffect(() => {
+  //   if (products.length > 0 && cart.length > 0) {
+  //     const sum = cart.reduce((acc, item) => {
+  //       const product = products.find((product) => product.id === item.id);
+  //       return acc + product.price * item.qty;
+  //     }, 0);
+  //     setTotalPrice(sum);
+  //     localStorage.setItem('cart', JSON.stringify(cart));
+  //   }
+  // }, [cart]);
+  //
+  //
+  // // untuk mengambil cart yang idnya sama
+  // const handleAddToCart = (id) => {
+  //   if (cart.find((item) => item.id === id)) {
+  //     setCart(cart.map((item) => (item.id === id ? { ...item, qty: item.qty + 1 } : item)));
+  //   } else {
+  //     setCart([...cart, { id, qty: 1 }]);
+  //   }
+  // };
+  //
+  //
   // untuk logout
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  // dipindah ke layout/navbar.jsx
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
 
-    window.location.href = '/Login';
-  };
+  //   window.location.href = '/Login';
+  // };
   // useRef
   // klo useState ada setter (setState), klo useRef gaada setternya, harus di import
-  const cartRef = useRef(JSON.parse(localStorage.getItem('cart')) || []);
-  const handleAddToCartReff = (id) => {
-    // akses ke current karna ga pake setter
-    cartRef.current = [...cartRef.current, { id, qty: 1 }];
-    localStorage.setItem('cart', JSON.stringify(cartRef.current));
-  };
-
+  // const cartRef = useRef(JSON.parse(localStorage.getItem('cart')) || []);
+  //
+  //
+  // klo useRef di map harus panggil current, klo useState gauysh
+  // const handleAddToCartReff = (id) => {
+  //   // akses ke current karna ga pake setter
+  //   cartRef.current = [...cartRef.current, { id, qty: 1 }];
+  //   localStorage.setItem('cart', JSON.stringify(cartRef.current));
+  // };
+  //
+  //
   // manipulasi DOM, menghilangkan total price hingga add to cart di tekan
-  const totalPriceRef = useRef(null);
-  useEffect(() => {
-    if (cart.length > 0) {
-      totalPriceRef.current.style.display = 'table-row';
-      // table row untuk membuat colum
-    } else {
-      totalPriceRef.current.style.display = 'none';
-    }
-  }, [cart]);
-
+  // di pindah ke tableCart
+  // const totalPriceRef = useRef(null);
+  // useEffect(() => {
+  //   if (cart.length > 0) {
+  //     totalPriceRef.current.style.display = 'table-row';
+  //     // table row untuk membuat colum
+  //   } else {
+  //     totalPriceRef.current.style.display = 'none';
+  //   }
+  // }, [cart]);
+  //
+  //
+  //
   // untuk fetch API yang ada di folder 'src/service/product.service.js'
   useEffect(() => {
     getProducts((data) => {
@@ -114,12 +143,9 @@ const ProductsPage = () => {
   return (
     // metode nested component
     <>
-      <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
-        {username}
-        <Button classname="ml-5 bg-black" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </div>
+      {/* syntax dipindah ke layout/navbar.jsx */}
+      {/* <Navbar /> */}
+      {/* navbar ditaro di main agar saat buka semua halaman navbar tidak berubah */}
 
       <div className="flex justify-center py-5">
         <div className="w-4/6 flex flex-wrap">
@@ -130,48 +156,19 @@ const ProductsPage = () => {
               <CardProduct key={product.id}>
                 <CardProduct.Header image={product.image} id={product.id} />
                 <CardProduct.Body name={product.title}>{product.description}</CardProduct.Body>
-                <CardProduct.Footer price={product.price} id={product.id} handleAddToCart={handleAddToCart} />
+                <CardProduct.Footer
+                  price={product.price}
+                  id={product.id}
+                  // karna sudah pake addToCart redux store maka udh ga di pake
+                  // handleAddToCart={handleAddToCart}
+                />
               </CardProduct>
             ))}
         </div>
         {/* hook/ useState */}
         <div className="w-2/6">
           <h1 className="text-3xl font-bold text-blue-600 ml-5 mb-2"> Cart</h1>
-
-          <table className="text-left table-auto border-separate border-spacing-x-5 ">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* klo useRef di map harus panggil current, klo useState gauysh */}
-              {products.length > 0 &&
-                cart.map((item) => {
-                  const product = products.find((product) => product.id === item.id);
-                  return (
-                    <tr key={item.id}>
-                      <td>{product.title.substring(0, 10)}...</td>
-                      <td>$ {product.price.toLocaleString('id-ID', { styles: 'currency', currency: 'USD' })}</td>
-                      <td>{item.qty}</td>
-                      <td>$ {(item.qty * product.price).toLocaleString('id-ID', { styles: 'currency', currency: 'USD' })}</td>
-                    </tr>
-                  );
-                })}
-              {/* dikomentari dlu total price untuk useRef */}
-              <tr ref={totalPriceRef}>
-                <td colSpan={3}>
-                  <b>Total Price</b>
-                </td>
-                <td>
-                  <b>Rp.{totalPrice.toLocaleString('id-ID', { styles: 'currency', currency: 'IDR' })}</b>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <TableCart products={products} />
         </div>
       </div>
       <div className="flex w-100 justify-center"></div>

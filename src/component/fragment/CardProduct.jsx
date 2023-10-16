@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import Button from '../element/button/button';
+// memasukkan cart kedalam store melalusi dispatch
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../reactRedux/actions_slice/cartSlice';
 
 const CardProduct = (props) => {
   const { children } = props;
@@ -31,12 +34,20 @@ const Body = (props) => {
   );
 };
 const Footer = (props) => {
-  const { price, handleAddToCart, id } = props;
+  const {
+    price,
+    // handleAddToCart,
+    id,
+  } = props;
+  // handleAddToCart(id), memasukkan cart kedalam store(redux)
+  const dispatch = useDispatch();
   return (
     <div className="flex items-center justify-between px-5 pb-5">
       {/* nambah currency, nominal detail */}
       <span className="text-xl font-bold text-white">${price.toLocaleString('id-ID', { styles: 'currency', currency: 'USD' })}</span>
-      <Button classname="bg-blue-600" onClick={() => handleAddToCart(id)}>
+      {/* dispatch menggantikan handleAddToCart(id) */}
+      <Button classname="bg-blue-600" onClick={() => dispatch(addToCart({ id, qty: 1 }))}>
+        {/* id diambil dari props */}
         Add to Cart
       </Button>
     </div>
