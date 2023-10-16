@@ -1,5 +1,5 @@
 import Button from '../component/element/button/button';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import CardProduct from '../component/fragment/CardProduct';
 import Counter from '../component/fragment/counter';
 import { getProducts } from '../services/product.service';
@@ -7,6 +7,7 @@ import { getUsername } from '../services/auth.service';
 import { useLogin } from '../hooks/useLogin';
 import TableCart from '../component/fragment/tableCart';
 import { Navbar } from '../component/layout/navbar';
+import { DarkMode } from '../context/darkMode';
 
 // belajar rendering list, atau jika data ada banyak dalam bentuk card
 // const products = [
@@ -34,6 +35,13 @@ import { Navbar } from '../component/layout/navbar';
 // ];
 
 const ProductsPage = () => {
+  //
+  //
+  // membuat darkmode
+  const { isDarkMode, setIsDarkMode } = useContext(DarkMode);
+  //
+  //
+  //
   // hook, state dalam functional component ato usestate
   // sdh tidak di pakai karna sdh pake addToCart dari redux store
   // const [cart, setCart] = useState([]);
@@ -146,8 +154,9 @@ const ProductsPage = () => {
       {/* syntax dipindah ke layout/navbar.jsx */}
       {/* <Navbar /> */}
       {/* navbar ditaro di main agar saat buka semua halaman navbar tidak berubah */}
+      <Navbar />
 
-      <div className="flex justify-center py-5">
+      <div className={`flex justify-center py-5 ${isDarkMode && 'bg-gray-800'}`}>
         <div className="w-4/6 flex flex-wrap">
           {/*products.length > 0 = kita mapping klo datanya ada */}
           {products.length > 0 &&

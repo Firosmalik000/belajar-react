@@ -12,6 +12,7 @@ import { DetailProductPage } from './pages/detailProduct';
 import { Provider } from 'react-redux';
 import store from './reactRedux/store';
 import { Navbar } from './component/layout/navbar';
+import DarkModeContextProvider from './context/darkMode';
 
 const router = createBrowserRouter([
   {
@@ -45,9 +46,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      {/* <Navbar /> */}
       {/* membuat semua router dalam naungan store */}
-      <RouterProvider router={router} />
+      <DarkModeContextProvider>
+        {/* darkmode nya di panggil di AuthLayout */}
+        <RouterProvider router={router} />
+      </DarkModeContextProvider>
     </Provider>
   </React.StrictMode>
 );
